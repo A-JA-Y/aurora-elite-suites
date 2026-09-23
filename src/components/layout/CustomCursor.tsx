@@ -69,7 +69,7 @@ export function CustomCursor() {
       <div
         ref={dot}
         aria-hidden
-        className="pointer-events-none fixed left-0 top-0 z-[200] h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-fairway mix-blend-multiply transition-opacity duration-300"
+        className="pointer-events-none fixed left-0 top-0 z-[200] h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-riso-rust mix-blend-multiply transition-opacity duration-300"
         style={{ opacity: hidden || mode === "view" || mode === "drag" ? 0 : 1 }}
       />
       <div
@@ -80,13 +80,13 @@ export function CustomCursor() {
           width: size,
           height: size,
           opacity: hidden ? 0 : 1,
-          backgroundColor: mode === "view" || mode === "drag" ? "rgba(250,247,242,0.92)" : "transparent",
-          border: mode === "view" || mode === "drag" ? "none" : "1px solid rgba(194,163,107,0.9)",
-          boxShadow: mode === "view" || mode === "drag" ? "0 12px 40px -12px rgba(21,21,20,0.4)" : "none",
+          backgroundColor: mode === "view" || mode === "drag" ? "rgba(246,234,225,0.95)" : "transparent",
+          border: mode === "view" || mode === "drag" ? "none" : "1.5px solid rgba(224,133,115,0.95)",
+          boxShadow: mode === "view" || mode === "drag" ? "5px 5px 0 0 rgba(140,67,24,0.9)" : "none",
         }}
       >
         <span
-          className="font-sans text-[0.6875rem] font-semibold uppercase tracking-[0.2em] text-fairway transition-opacity duration-300"
+          className="font-sans text-[0.6875rem] font-semibold uppercase tracking-[0.2em] text-riso-rust transition-opacity duration-300"
           style={{ opacity: label ? 1 : 0 }}
         >
           {label}

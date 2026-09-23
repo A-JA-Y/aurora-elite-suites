@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Manrope } from "next/font/google";
+import { Inter, Lora } from "next/font/google";
 import { SITE, absoluteUrl } from "@/data/site";
 import { HOME } from "@/data/home";
 import { img } from "@/data/images";
@@ -8,6 +8,7 @@ import { JsonLd } from "@/components/ui/JsonLd";
 import { Providers } from "@/components/layout/Providers";
 import { Preloader } from "@/components/layout/Preloader";
 import { CustomCursor } from "@/components/layout/CustomCursor";
+import { ScrollProgress } from "@/components/layout/ScrollProgress";
 import { Header } from "@/components/layout/Header";
 import { MenuOverlay } from "@/components/layout/MenuOverlay";
 import { Footer } from "@/components/layout/Footer";
@@ -15,17 +16,19 @@ import { MobileDock } from "@/components/layout/MobileDock";
 import { Assistant } from "@/components/assistant/Assistant";
 import "./globals.css";
 
-const cormorant = Cormorant_Garamond({
+// Retro editorial pairing: Lora sets the headlines, Inter carries the body.
+// next/font self-hosts both, so there is no render-blocking Google Fonts request.
+const lora = Lora({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700"],
   style: ["normal", "italic"],
-  variable: "--font-cormorant",
+  variable: "--font-lora",
   display: "swap",
 });
 
-const manrope = Manrope({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-manrope",
+  variable: "--font-inter",
   display: "swap",
 });
 
@@ -66,7 +69,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#faf7f2",
+  themeColor: "#f6eae1",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -76,7 +79,7 @@ const preloadScript = `try{if(sessionStorage.getItem('aes-preloaded')==='1'||mat
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-IN" className={`${cormorant.variable} ${manrope.variable} h-full antialiased`}>
+    <html lang="en-IN" className={`${lora.variable} ${inter.variable} h-full antialiased`}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: preloadScript }} />
         <style>{`html.no-preload #preloader{display:none}`}</style>
@@ -86,6 +89,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Providers>
           <Preloader />
           <CustomCursor />
+          <ScrollProgress />
           <Header />
           <MenuOverlay />
           <main id="main" className="flex-1">

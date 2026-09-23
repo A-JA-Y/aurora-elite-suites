@@ -1,26 +1,61 @@
 @import "tailwindcss";
 @import "lenis/dist/lenis.css";
 
-@theme {
-  --color-ivory: #faf7f2;
-  --color-cream: #f4eee3;
-  --color-sand: #efe6d8;
-  --color-sand-2: #e4d8c3;
-  --color-oak: #a67c52;
-  --color-oak-2: #8c6540;
-  --color-fairway: #2f5b40;
-  --color-fairway-2: #244a33;
-  --color-forest: #1b3527;
-  --color-moss: #3f7354;
-  --color-brass: #c2a36b;
-  --color-brass-2: #d9c08a;
-  --color-charcoal: #2a2a28;
-  --color-ink: #151514;
-  --color-stone: #6e6a62;
-  --color-mist: #b9b3a7;
+/* ===========================================================================
+   AURORA ELITE SUITES — RISOGRAPH EDITORIAL BRAND KIT
+   ---------------------------------------------------------------------------
+   Fonts are loaded by next/font in app/layout.tsx (Lora + Inter), which
+   self-hosts them and exposes --font-lora / --font-inter. Never @import a
+   Google Fonts URL here: it blocks first paint and breaks offline builds.
 
-  --font-display: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
-  --font-sans: var(--font-manrope), "Manrope", ui-sans-serif, system-ui, sans-serif;
+   The semantic token names (ivory, oak, fairway, brass, ...) are kept so every
+   component keeps working; their VALUES now resolve to the four riso inks.
+   =========================================================================== */
+
+@theme {
+  /* --- The four riso inks -------------------------------------------- */
+  --color-riso-bg: #f6eae1;      /* warm cream stock  */
+  --color-riso-primary: #8c4318; /* deep terracotta / rust ink */
+  --color-riso-accent: #e08573;  /* soft salmon / coral ink */
+  --color-riso-dark: #2d4b63;    /* deep steel blue ink */
+
+  /* Convenience aliases so `bg-riso-cream`, `text-riso-rust` etc. exist */
+  --color-riso-cream: #f6eae1;
+  --color-riso-rust: #8c4318;
+  --color-riso-salmon: #e08573;
+  --color-riso-blue: #2d4b63;
+
+  /* --- Paper (cream stock, progressively inked) ----------------------- */
+  --color-ivory: #f6eae1;
+  --color-cream: #f1ded1;
+  --color-sand: #ead3c3;
+  --color-sand-2: #dfc0ab;
+
+  /* --- Rust / terracotta (headings, eyebrows, primary ink) ------------ */
+  --color-oak: #8c4318;
+  --color-oak-2: #6d330f;
+
+  /* --- Steel blue (actions, dark panels, body ink) -------------------- */
+  --color-fairway: #2d4b63;
+  --color-fairway-2: #22394c;
+  --color-forest: #1b2e3d;
+  --color-moss: #3f6786;
+
+  /* --- Salmon / coral (accent, highlights) ---------------------------- */
+  --color-brass: #e08573;
+  --color-brass-2: #efa795;
+
+  /* --- Text ----------------------------------------------------------- */
+  --color-charcoal: #2d4b63;
+  --color-ink: #14222d;
+  --color-stone: #7b6357;
+  --color-mist: #b9a396;
+
+  /* --- Typography ----------------------------------------------------- */
+  --font-display: var(--font-lora), Lora, Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-inter), Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-header: var(--font-display);
+  --font-body: var(--font-sans);
 
   --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-smooth: cubic-bezier(0.65, 0, 0.35, 1);
@@ -29,15 +64,20 @@
   --breakpoint-xs: 26rem;
   --breakpoint-3xl: 100rem;
 
-  --shadow-soft: 0 24px 60px -24px rgb(42 42 40 / 0.28);
-  --shadow-card: 0 1px 2px rgb(42 42 40 / 0.05), 0 16px 40px -16px rgb(42 42 40 / 0.2);
-  --shadow-dock: 0 12px 40px -8px rgb(21 21 20 / 0.35), 0 0 0 1px rgb(255 255 255 / 0.4) inset;
+  /* Riso presses print flat ink, so shadows are soft warm washes and
+     hard offset blocks rather than realistic drop shadows. */
+  --shadow-soft: 0 24px 60px -24px rgb(45 75 99 / 0.3);
+  --shadow-card: 0 1px 2px rgb(45 75 99 / 0.06), 0 16px 40px -18px rgb(45 75 99 / 0.24);
+  --shadow-dock: 0 12px 40px -8px rgb(20 34 45 / 0.4), 0 0 0 1px rgb(246 234 225 / 0.14) inset;
+  --shadow-riso: 6px 6px 0 0 var(--color-riso-primary);
+  --shadow-riso-accent: 6px 6px 0 0 var(--color-riso-accent);
 
   --animate-marquee: marquee 48s linear infinite;
   --animate-marquee-slow: marquee 90s linear infinite;
   --animate-pulse-soft: pulse-soft 2.4s ease-in-out infinite;
   --animate-float: float 7s ease-in-out infinite;
   --animate-shimmer: shimmer 2.2s linear infinite;
+  --animate-misprint: misprint 6s steps(1, end) infinite;
 
   @keyframes marquee {
     from { transform: translateX(0); }
@@ -55,6 +95,13 @@
     from { background-position: -200% 0; }
     to { background-position: 200% 0; }
   }
+  /* The plate slips a hair on the drum, then settles — the riso tell. */
+  @keyframes misprint {
+    0%, 92% { transform: translate(0, 0); }
+    94% { transform: translate(1.5px, -1px); }
+    96% { transform: translate(-1px, 1px); }
+    98%, 100% { transform: translate(0, 0); }
+  }
 }
 
 @layer base {
@@ -62,20 +109,37 @@
     --header-h: 5.25rem;
     --header-offset: var(--header-h);
     --dock-h: 4.75rem;
+    /* Element-local pointer position, published by <Spotlight>. */
+    --mx: 50%;
+    --my: 50%;
     color-scheme: light;
   }
 
   html {
     -webkit-text-size-adjust: 100%;
     scroll-behavior: auto;
-    background: var(--color-ivory);
+    background: var(--color-riso-bg);
   }
 
   body {
     @apply bg-ivory font-sans text-charcoal antialiased;
     overflow-x: clip;
     text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     font-feature-settings: "ss01", "cv11";
+  }
+
+  /* The paper itself: a fixed fibre wash so every section sits on one sheet. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.5;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)' opacity='0.16'/%3E%3C/svg%3E");
   }
 
   body[data-lock="true"] {
@@ -83,12 +147,14 @@
   }
 
   ::selection {
-    background: rgb(194 163 107 / 0.45);
+    background: rgb(224 133 115 / 0.5);
     color: var(--color-ink);
   }
 
-  h1, h2, h3, h4 {
+  h1, h2, h3, h4, h5, h6 {
     @apply font-display font-medium;
+    color: inherit;
+    margin-top: 0;
     letter-spacing: -0.01em;
     text-wrap: balance;
   }
@@ -107,7 +173,7 @@
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-fairway);
+    outline: 2px solid var(--color-riso-primary);
     outline-offset: 3px;
     border-radius: 2px;
   }
@@ -125,6 +191,65 @@
   }
 }
 
+/* ---------- Riso brand-kit helper classes ----------
+   Named exactly as the brand kit spec so they can be dropped into any markup,
+   including CMS/rich-text output. They live in @layer utilities (and the
+   button in @layer components) so Tailwind variants such as `hover:text-*`
+   still win over them — an unlayered rule would outrank every variant. */
+
+@layer components {
+  .btn-riso {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-family: var(--font-body);
+    font-weight: 600;
+    background-color: var(--color-riso-primary);
+    color: var(--color-riso-bg);
+    border: 2px solid var(--color-riso-primary);
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 0 var(--color-riso-dark);
+    transition:
+      background-color 0.2s ease-in-out,
+      color 0.2s ease-in-out,
+      transform 0.2s var(--ease-expo),
+      box-shadow 0.2s var(--ease-expo);
+  }
+
+  .btn-riso:hover {
+    background-color: transparent;
+    color: var(--color-riso-primary);
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 0 var(--color-riso-accent);
+  }
+
+  .btn-riso:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0 0 0 0 var(--color-riso-accent);
+  }
+}
+
+@layer utilities {
+.bg-riso-cream  { background-color: var(--color-riso-bg); }
+.bg-riso-rust   { background-color: var(--color-riso-primary); }
+.bg-riso-salmon { background-color: var(--color-riso-accent); }
+.bg-riso-blue   { background-color: var(--color-riso-dark); }
+
+.text-riso-cream  { color: var(--color-riso-bg); }
+.text-riso-rust   { color: var(--color-riso-primary); }
+.text-riso-salmon { color: var(--color-riso-accent); }
+.text-riso-blue   { color: var(--color-riso-dark); }
+
+.border-riso-rust { border-color: var(--color-riso-primary); }
+.border-riso-blue { border-color: var(--color-riso-dark); }
+
+.font-header { font-family: var(--font-header); }
+.font-body   { font-family: var(--font-body); }
+}
+
 /* ---------- Layout & type utilities ---------- */
 
 @utility container-x {
@@ -137,41 +262,41 @@
 
 @utility display-2xl {
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: 600;
   font-size: clamp(3rem, 9vw, 9.5rem);
-  line-height: 0.92;
+  line-height: 0.94;
   letter-spacing: -0.03em;
 }
 
 @utility display-xl {
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: 600;
   font-size: clamp(2.75rem, 6.6vw, 6.75rem);
-  line-height: 0.96;
+  line-height: 0.98;
   letter-spacing: -0.025em;
 }
 
 @utility display-lg {
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: 600;
   font-size: clamp(2.25rem, 4.8vw, 4.75rem);
-  line-height: 1.02;
+  line-height: 1.04;
   letter-spacing: -0.02em;
 }
 
 @utility display-md {
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: 600;
   font-size: clamp(1.9rem, 3.3vw, 3.25rem);
-  line-height: 1.08;
+  line-height: 1.1;
   letter-spacing: -0.015em;
 }
 
 @utility display-sm {
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: 600;
   font-size: clamp(1.5rem, 2.3vw, 2.25rem);
-  line-height: 1.15;
+  line-height: 1.18;
   letter-spacing: -0.01em;
 }
 
@@ -180,21 +305,21 @@
 }
 
 @utility hairline {
-  border-color: rgb(42 42 40 / 0.12);
+  border-color: rgb(45 75 99 / 0.16);
 }
 
 @utility hairline-light {
-  border-color: rgb(250 247 242 / 0.16);
+  border-color: rgb(246 234 225 / 0.18);
 }
 
 @utility glass {
-  background: rgb(250 247 242 / 0.7);
-  backdrop-filter: blur(20px) saturate(1.5);
-  -webkit-backdrop-filter: blur(20px) saturate(1.5);
+  background: rgb(246 234 225 / 0.78);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
 }
 
 @utility glass-dark {
-  background: rgb(21 21 20 / 0.6);
+  background: rgb(27 46 61 / 0.66);
   backdrop-filter: blur(20px) saturate(1.3);
   -webkit-backdrop-filter: blur(20px) saturate(1.3);
 }
@@ -234,14 +359,14 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    opacity: 0.07;
+    opacity: 0.09;
     mix-blend-mode: multiply;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 }
 
 @utility img-shimmer {
-  background: linear-gradient(100deg, #efe6d8 20%, #f6f0e6 40%, #efe6d8 60%);
+  background: linear-gradient(100deg, #ead3c3 20%, #f6eae1 40%, #ead3c3 60%);
   background-size: 200% 100%;
   animation: shimmer 2.2s linear infinite;
 }
@@ -251,13 +376,151 @@
 }
 
 @utility text-shadow-soft {
-  text-shadow: 0 2px 30px rgb(21 21 20 / 0.35);
+  text-shadow: 0 2px 30px rgb(20 34 45 / 0.4);
 }
 
 @utility scroll-snap-x {
   scroll-snap-type: x mandatory;
   & > * {
     scroll-snap-align: start;
+  }
+}
+
+/* ---------- Interactive riso treatments ---------- */
+
+/* Halftone dot screen. Sits over photos and dark panels so they read as
+   printed rather than photographic. */
+@utility halftone {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.18;
+    mix-blend-mode: multiply;
+    background-image: radial-gradient(var(--color-riso-dark) 0.9px, transparent 1px);
+    background-size: 4px 4px;
+  }
+}
+
+/* Ink misregistration: two ghost plates behind the text that pull apart on
+   hover, the way a two-colour riso pass drifts. Needs `data-text` on the
+   element carrying the same string as its visible text. */
+@utility ink-shift {
+  position: relative;
+  isolation: isolate;
+  &::before,
+  &::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+    transition: transform 0.45s var(--ease-expo), opacity 0.45s var(--ease-expo);
+    opacity: 0;
+  }
+  &::before {
+    color: var(--color-riso-accent);
+    mix-blend-mode: multiply;
+  }
+  &::after {
+    color: var(--color-riso-dark);
+    mix-blend-mode: multiply;
+  }
+  &:hover::before,
+  &:focus-visible::before {
+    opacity: 0.85;
+    transform: translate(-3px, 2px);
+  }
+  &:hover::after,
+  &:focus-visible::after {
+    opacity: 0.7;
+    transform: translate(3px, -2px);
+  }
+}
+
+/* A card printed on the stock: hard offset block that presses in on hover. */
+@utility riso-card {
+  border: 1.5px solid var(--color-riso-dark);
+  background: var(--color-riso-bg);
+  box-shadow: 6px 6px 0 0 var(--color-riso-dark);
+  transition: transform 0.45s var(--ease-expo), box-shadow 0.45s var(--ease-expo);
+  &:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 10px 10px 0 0 var(--color-riso-accent);
+  }
+  &:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 0 var(--color-riso-accent);
+  }
+}
+
+/* Warm light that follows the cursor. <Spotlight> publishes element-local
+   --mx/--my; without JS the :root defaults leave a static centre glow. */
+@utility spotlight {
+  position: relative;
+  /* Contain the wash's z-index so it can sit over sibling art layers without
+     escaping into the page's stacking order. */
+  isolation: isolate;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.6s var(--ease-expo);
+    background: radial-gradient(
+      28rem circle at var(--mx) var(--my),
+      rgb(224 133 115 / 0.3),
+      transparent 68%
+    );
+  }
+  &:hover::before {
+    opacity: 1;
+  }
+}
+
+/* Duotone photo treatment: flattened to ink, lifting back to full colour when
+   the nearest `group` is hovered. */
+@utility riso-duotone {
+  filter: grayscale(1) contrast(1.08);
+  transition: filter 0.7s var(--ease-expo);
+}
+
+/* A rust-and-steel ink plate laid over a photo, which thins out on hover so
+   the real colour comes through. */
+@utility riso-plate {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+    opacity: 0.32;
+    transition: opacity 0.7s var(--ease-expo);
+    background: linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--color-riso-primary) 65%, transparent),
+      color-mix(in srgb, var(--color-riso-dark) 55%, transparent)
+    );
+  }
+}
+
+/* The `group` reactions live outside @utility: Tailwind flattens a nested
+   `.group:hover &` into an unconditional rule, which would pin these to their
+   hover state. Plain rules in the utilities layer keep the condition intact. */
+@layer utilities {
+  .group:hover .riso-plate::after,
+  .group:focus-within .riso-plate::after {
+    opacity: 0.08;
+  }
+
+  .group:hover .riso-duotone,
+  .group:focus-within .riso-duotone {
+    filter: grayscale(0) contrast(1);
   }
 }
 

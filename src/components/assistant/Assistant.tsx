@@ -52,6 +52,10 @@ export function Assistant() {
     if (assistantOpen) setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 350);
   }, [assistantOpen]);
 
+  // Drop any in-flight stream on unmount; without this the reader keeps
+  // pulling and calling setState after the component is gone.
+  useEffect(() => () => abortRef.current?.abort(), []);
+
   const scrollToEnd = useCallback(() => {
     const el = listRef.current;
     if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });

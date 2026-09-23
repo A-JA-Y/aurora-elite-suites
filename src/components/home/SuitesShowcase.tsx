@@ -18,7 +18,13 @@ export function SuitesShowcase() {
           return (
             <Reveal key={s.slug} delay={i * 0.12} className={cn(i === 1 && "lg:mt-24")}>
               <Link href={`/suites/${s.slug}`} className="group block" data-cursor="view" data-cursor-label="View suite">
-                <ParallaxImage image={image} className="aspect-[4/5] rounded-[6px] sm:aspect-[5/4]" speed={0.1} scale={1.15} sizes="(max-width: 1024px) 100vw, 50vw">
+                <ParallaxImage
+                  image={image}
+                  className="riso-plate aspect-[4/5] rounded-[2px] ring-[1.5px] ring-riso-blue/25 transition-shadow duration-500 ease-expo group-hover:shadow-[10px_10px_0_0_var(--color-riso-salmon)] sm:aspect-[5/4]"
+                  speed={0.1}
+                  scale={1.15}
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                >
                   <div className="absolute inset-0 bg-gradient-to-t from-ink/55 via-transparent to-transparent opacity-80 transition-opacity duration-700 group-hover:opacity-95" />
                   <span
                     className={cn(

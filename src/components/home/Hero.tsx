@@ -22,16 +22,21 @@ export function Hero() {
   const root = useRef<HTMLElement>(null);
   const media = useRef<HTMLDivElement>(null);
   const content = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState(0);
+  const [index, setIndex] = useState(0);
 
   const slides = useMemo(
     () => (isMobile ? [img(HOME.hero.mobileId), ...imgs(...HOME.hero.slideshowIds.slice(1, 4))] : imgs(...HOME.hero.slideshowIds)),
     [isMobile],
   );
 
+  // The mobile set is shorter than the desktop one, so a resize can leave the
+  // index past the end. Clamp on read rather than in an effect, so the very
+  // first render after the switch is already in range.
+  const active = index % slides.length;
+
   useEffect(() => {
     if (!preloaderDone) return;
-    const id = window.setInterval(() => setActive((a) => (a + 1) % slides.length), SLIDE_SECONDS * 1000);
+    const id = window.setInterval(() => setIndex((a) => (a + 1) % slides.length), SLIDE_SECONDS * 1000);
     return () => window.clearInterval(id);
   }, [preloaderDone, slides.length]);
 
@@ -75,8 +80,17 @@ export function Hero() {
             <SmartImage image={s} priority={i === 0} sizes="100vw" className="absolute inset-0" />
           </motion.div>
         ))}
-        <div className="absolute inset-0 z-[3] bg-gradient-to-t from-forest via-forest/25 to-ink/25" />
-        <div className="absolute inset-0 z-[3] bg-gradient-to-r from-forest/55 via-transparent to-transparent" />
+        {/* Ink plates over the photo: steel blue from the foot, rust from the
+            left, then a halftone screen so it reads as printed, not shot. */}
+        <div className="absolute inset-0 z-[3] bg-gradient-to-t from-forest via-forest/30 to-ink/20" />
+        <div className="absolute inset-0 z-[3] bg-gradient-to-r from-oak-2/45 via-transparent to-transparent mix-blend-multiply" />
+        <div
+          className="absolute inset-0 z-[4] opacity-25 mix-blend-multiply"
+          style={{
+            backgroundImage: "radial-gradient(#14222d 0.9px, transparent 1px)",
+            backgroundSize: "4px 4px",
+          }}
+        />
       </div>
 
       {/* Content */}
@@ -151,7 +165,7 @@ export function Hero() {
                 <button
                   key={s.id}
                   type="button"
-                  onClick={() => setActive(i)}
+                  onClick={() => setIndex(i)}
                   aria-label={`Show photo ${i + 1}`}
                   className="relative h-6 w-10 overflow-hidden"
                   data-cursor="link"

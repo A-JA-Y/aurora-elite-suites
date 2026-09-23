@@ -7,6 +7,7 @@ import { ParallaxImage } from "@/components/ui/ParallaxImage";
 import { Reveal } from "@/components/ui/Reveal";
 import { Eyebrow } from "@/components/ui/SectionHeader";
 import { SplitHeading } from "@/components/ui/SplitHeading";
+import { Spotlight } from "@/components/ui/Spotlight";
 
 interface FinalCtaProps {
   heading?: string;
@@ -17,10 +18,11 @@ interface FinalCtaProps {
 
 export function FinalCta({ heading = HOME.cta.heading, body = HOME.cta.body, imageId = HOME.cta.imageId, eyebrow = "Book your stay" }: FinalCtaProps) {
   return (
-    <section className="relative overflow-hidden bg-forest text-ivory">
+    <Spotlight as="section" className="relative overflow-hidden bg-forest text-ivory">
       <ParallaxImage image={img(imageId)} className="absolute inset-0" speed={0.2} scale={1.22} reveal={false} sizes="100vw">
         <div className="absolute inset-0 bg-forest/60" />
         <div className="absolute inset-0 bg-gradient-to-t from-forest via-transparent to-forest/40" />
+        <div className="absolute inset-0 bg-oak-2/25 mix-blend-multiply" />
       </ParallaxImage>
       <div className="container-x relative z-10 flex min-h-[80svh] flex-col items-center justify-center py-28 text-center">
         <Eyebrow tone="dark">{eyebrow}</Eyebrow>
@@ -42,6 +44,6 @@ export function FinalCta({ heading = HOME.cta.heading, body = HOME.cta.body, ima
           <p className="mt-8 font-sans text-[0.75rem] tracking-[0.12em] text-ivory/55">Usually replies within the hour · {SITE.email}</p>
         </Reveal>
       </div>
-    </section>
+    </Spotlight>
   );
 }

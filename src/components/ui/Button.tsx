@@ -24,14 +24,16 @@ export interface ButtonProps {
   ariaLabel?: string;
 }
 
+// Flat riso ink plus a hard offset plate that shifts under the cursor —
+// no soft drop shadows, which a riso press cannot print.
 const variants: Record<Variant, string> = {
-  primary: "bg-fairway text-ivory hover:bg-fairway-2 shadow-[0_10px_30px_-12px_rgba(47,91,64,0.6)]",
-  secondary: "bg-transparent text-charcoal ring-1 ring-inset ring-charcoal/20 hover:ring-charcoal/60",
-  ghost: "bg-transparent text-charcoal hover:bg-charcoal/5",
-  brass: "bg-brass text-ink hover:bg-brass-2",
-  light: "bg-ivory text-charcoal hover:bg-white",
-  "outline-light": "bg-transparent text-ivory ring-1 ring-inset ring-ivory/40 hover:bg-ivory/10 hover:ring-ivory/70",
-  dark: "bg-ink text-ivory hover:bg-charcoal",
+  primary: "bg-riso-rust text-riso-cream hover:bg-oak-2 shadow-[4px_4px_0_0_var(--color-riso-dark)] hover:shadow-[7px_7px_0_0_var(--color-riso-salmon)] hover:-translate-x-0.5 hover:-translate-y-0.5",
+  secondary: "bg-transparent text-riso-blue ring-[1.5px] ring-inset ring-riso-blue/35 hover:ring-riso-blue hover:bg-riso-salmon/15",
+  ghost: "bg-transparent text-riso-blue hover:bg-riso-rust/8",
+  brass: "bg-riso-salmon text-riso-blue hover:bg-brass-2 shadow-[4px_4px_0_0_var(--color-riso-blue)] hover:shadow-[7px_7px_0_0_var(--color-riso-rust)] hover:-translate-x-0.5 hover:-translate-y-0.5",
+  light: "bg-riso-cream text-riso-rust hover:bg-white shadow-[4px_4px_0_0_var(--color-riso-rust)] hover:shadow-[7px_7px_0_0_var(--color-riso-salmon)] hover:-translate-x-0.5 hover:-translate-y-0.5",
+  "outline-light": "bg-transparent text-ivory ring-[1.5px] ring-inset ring-ivory/45 hover:bg-ivory/12 hover:ring-ivory/80",
+  dark: "bg-riso-blue text-riso-cream hover:bg-forest shadow-[4px_4px_0_0_var(--color-riso-salmon)] hover:shadow-[7px_7px_0_0_var(--color-riso-rust)] hover:-translate-x-0.5 hover:-translate-y-0.5",
 };
 
 const sizes: Record<Size, string> = {
@@ -65,7 +67,7 @@ export function Button({
     );
 
   const classes = cn(
-    "group relative inline-flex select-none items-center justify-center overflow-hidden rounded-full font-sans font-semibold tracking-[0.01em] transition-[background-color,box-shadow,color,transform] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-60",
+    "group relative inline-flex select-none items-center justify-center overflow-hidden rounded-[2px] font-sans font-semibold tracking-[0.01em] transition-[background-color,box-shadow,color,transform,translate] duration-300 ease-expo active:translate-x-0.5 active:translate-y-0.5 active:shadow-none disabled:pointer-events-none disabled:opacity-60",
     variants[variant],
     sizes[size],
     className,
